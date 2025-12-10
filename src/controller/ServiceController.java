@@ -12,16 +12,27 @@ public class ServiceController {
 	}
 	
 	public void editService(Integer serviceID, String name, String description, Double price, Integer duration) {
+		List<Service> listService = getAllServices();
+		
+		for (Service service : listService) {
+			if(service.getServiceID() == serviceID) {
+				serviceModel.editService(serviceID, name, description, price, duration);
+			}
+			else {
+				return;
+			}
+		}
+		
+		
 		
 	}
-	public void deleteService(String serviceID) {
-		
+	public void deleteService(Integer serviceID) {
+		serviceModel.deleteService(serviceID);
 	}
 	
 	public List<Service> getAllServices(){
 		
-		
-		return null;
+		return serviceModel.getAllServices();
 	}
 	
 	public String validateAddService(String name, String description, Double price, Integer duration ) {
@@ -63,9 +74,40 @@ public class ServiceController {
 		return "Service successfully inserted";
 	}
 	
-	public String validateEditService(String name, String description, Double price, Integer duration) {
+	public String validateEditService(Integer serviceID, String name, String description, Double price, Integer duration) {
+		if(name.isEmpty()) {
+			return "Name must be filled!";
+		}
+		
+		if(name.length() > 50 ) {
+			return "Name length must be less than or equal to 50";
+		}
 		
 		
-		return null;
+		if(description.isEmpty()) {
+			return "Description must be filled!";
+		}
+		
+		if(description.length() > 250) {
+			return "description length must be less than or equal to 250";
+		}
+		
+		
+		if(price < 0) {
+			return "Price must greater than 0";
+		}
+		
+		
+		int minDuration = 1 * 24 * 60 * 60;     // 86400
+	    int maxDuration = 30 * 24 * 60 * 60;    // 2592000
+		
+		
+	    if(duration <= minDuration || duration >= maxDuration) {
+	    	return "Duration must between 1 and 30 days";
+	    }
+		
+	    editService(serviceID, name, description, price, duration);
+		
+		return "Service successfully edited";
 	}
 }
