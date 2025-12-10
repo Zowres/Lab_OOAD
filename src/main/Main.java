@@ -10,7 +10,7 @@ public class Main extends Application{
 	Scene scene;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
+
 		borderPane = new BorderPane();
 		
 		scene = new Scene(borderPane);

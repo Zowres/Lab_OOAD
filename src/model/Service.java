@@ -10,7 +10,46 @@ public class Service {
 	private Integer serviceDuration;
 	
 	
-	
+	public Integer getServiceID() {
+		return serviceID;
+	}
+
+	public void setServiceID(Integer serviceID) {
+		this.serviceID = serviceID;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	public String getServiceDescription() {
+		return serviceDescription;
+	}
+
+	public void setServiceDescription(String serviceDescription) {
+		this.serviceDescription = serviceDescription;
+	}
+
+	public Double getServicePrice() {
+		return servicePrice;
+	}
+
+	public void setServicePrice(Double servicePrice) {
+		this.servicePrice = servicePrice;
+	}
+
+	public Integer getServiceDuration() {
+		return serviceDuration;
+	}
+
+	public void setServiceDuration(Integer serviceDuration) {
+		this.serviceDuration = serviceDuration;
+	}
+
 	public void addService(String name, String description, Double price, Integer duration) {
 		
 	}
