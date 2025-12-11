@@ -19,11 +19,10 @@ public class ServiceController {
 				serviceModel.editService(serviceID, name, description, price, duration);
 			}
 			else {
+				System.out.println("Gagal insert ke db");
 				return;
 			}
 		}
-		
-		
 		
 	}
 	public void deleteService(Integer serviceID) {

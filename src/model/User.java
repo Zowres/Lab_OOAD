@@ -1,6 +1,9 @@
 package model;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +18,7 @@ public class User{
 	private Date userDOB;
 	private String userRole;
 	
-	
+	private Connect connect = Connect.getInstance();
 
 	public Integer getUserID() {
 		return userID;
@@ -78,31 +81,151 @@ public class User{
 		
 	}
 	
+	public User(Integer userID, String userName, String userEmail, String userPassword, String userGender, Date userDOB,
+			String userRole) {
+		super();
+		this.userID = userID;
+		this.userName = userName;
+		this.userEmail = userEmail;
+		this.userPassword = userPassword;
+		this.userGender = userGender;
+		this.userDOB = userDOB;
+		this.userRole = userRole;
+	}
+	
+	private User createUserByRole(Integer id,String name,String email,String password,String gender,Date dob,String role) {
+	    role = role.toLowerCase();
+
+	    switch (role) {
+	        case "admin":
+	            return new Admin(id, name, email, password, gender, dob, role);
+
+	        case "employee":
+	            return new Employee(id, name, email, password, gender, dob, role);
+
+	        case "receptionist":
+	            return new Receptionist(id, name, email, password, gender, dob, role);
+
+	        case "laundry_staff":
+	        case "laundrystaff":
+	            return new LaundryStaff(id, name, email, password, gender, dob, role);
+
+	        case "customer":
+	        default:
+	            return new User(id, name, email, password, gender, dob, role);
+	    }
+	}
+
+
 	public User login(String email, String password) {
 	
-		// ntar balikin user ye
-		return null;
+		User user = null;
+
+	    String query = "SELECT * FROM Users WHERE userEmail = '" + email + "' AND userPassword = '" + password + "';";
+
+	    connect.execQuery(query);
+
+	    try {
+	        if (connect.rs.next()) {
+
+	            Integer id = connect.rs.getInt("userID");
+	            String name = connect.rs.getString("userName");
+	            String mail = connect.rs.getString("userEmail");
+	            String pass = connect.rs.getString("userPassword");
+	            String gender = connect.rs.getString("userGender");
+	            Date dob = connect.rs.getDate("userDOB");
+	            String role = connect.rs.getString("userRole");
+
+	            user = createUserByRole(id, name, mail, pass, gender, dob, role);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return user;
 	}
 	
 	public List<User> getUserByRole(String role){
-		
-		
-		//ntar balikin list user
-		return null;
+		 List<User> list = new ArrayList<>();
+
+		    String query = "SELECT * FROM Users WHERE userRole LIKE 'Employee' " +
+		                   "OR userRole LIKE 'Receptionist' " +
+		                   "OR userRole LIKE 'LaundryStaff';";
+
+		    connect.execQuery(query);
+
+		    try {
+		        while (connect.rs.next()) {
+
+		            Integer id = connect.rs.getInt("userID");
+		            String name = connect.rs.getString("userName");
+		            String email = connect.rs.getString("userEmail");
+		            String password = connect.rs.getString("userPassword");
+		            String gender = connect.rs.getString("userGender");
+		            Date dob = connect.rs.getDate("userDOB");
+		            String roles = connect.rs.getString("userRole");
+
+		            User emp = createUserByRole(id, name, email, password, gender, dob, roles);
+		            list.add(emp);
+		        }
+
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    return list;
 	}
 	
+	
 	public User getUserByEmail(String email) {
-		
-		
-		//balikin user
-		return null;
+		User user = null;
+
+	    String query = "SELECT * FROM Users WHERE userEmail = '" + email + "';";
+	    connect.execQuery(query);
+
+	    try {
+	        if (connect.rs.next()) {
+	            Integer id = connect.rs.getInt("userID");
+	            String name = connect.rs.getString("userName");
+	            String mail = connect.rs.getString("userEmail");
+	            String password = connect.rs.getString("userPassword");
+	            String gender = connect.rs.getString("userGender");
+	            Date dob = connect.rs.getDate("userDOB");
+	            String role = connect.rs.getString("userRole");
+
+	            user = new User(id, name, mail, password, gender, dob, role);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return user;
 	}
 	
 	public User getUserByName(String name) {
-		
-		
-		//balikin user
-		return null;
+		User user = null;
+
+	    String query = "SELECT * FROM Users WHERE userName = '" + name + "';";
+	    connect.execQuery(query);
+
+	    try {
+	        if (connect.rs.next()) {
+	            Integer id = connect.rs.getInt("userID");
+	            String username = connect.rs.getString("userName");
+	            String mail = connect.rs.getString("userEmail");
+	            String password = connect.rs.getString("userPassword");
+	            String gender = connect.rs.getString("userGender");
+	            Date dob = connect.rs.getDate("userDOB");
+	            String role = connect.rs.getString("userRole");
+
+	            user = new User(id, username, mail, password, gender, dob, role);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return user;
 	}
 	
 	public void addUser (String name, String email, String password, String gender, Date DOB, String role) {
