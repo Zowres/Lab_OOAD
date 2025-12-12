@@ -1,7 +1,13 @@
 package model;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import database.Connect;
 
 public class Transaction {
 	private Integer transactionID;
@@ -13,6 +19,8 @@ public class Transaction {
 	private String transactionStatus;
 	private Double totalWeight;
 	private String transactionNotes;
+	
+	private Connect connect = Connect.getInstance();
 	
 	
 	public Integer getTransactionID() {
@@ -86,34 +94,133 @@ public class Transaction {
 	public void setTransactionNotes(String transactionNotes) {
 		this.transactionNotes = transactionNotes;
 	}
-
-	public List<Transaction> getAllTransaction(){
-		
-		//return list
-		return null;
+	
+	
+	public Transaction(Integer transactionID, Integer serviceID, Integer customerID, Integer receptionistID,
+			Integer laundryStaffID, Date transactionDate, String transactionStatus, Double totalWeight,
+			String transactionNotes) {
+		super();
+		this.transactionID = transactionID;
+		this.serviceID = serviceID;
+		this.customerID = customerID;
+		this.receptionistID = receptionistID;
+		this.laundryStaffID = laundryStaffID;
+		this.transactionDate = transactionDate;
+		this.transactionStatus = transactionStatus;
+		this.totalWeight = totalWeight;
+		this.transactionNotes = transactionNotes;
 	}
 	
-	public List<Transaction> getTransactionByStatus (String status){
+	
+	public Transaction() {
 		
-		
-		//return list
-		return null;
 	}
+	
+	
+	public List<Transaction> getAllTransaction() {
+	    List<Transaction> list = new ArrayList<>();
+
+	    String query = "SELECT * FROM transaction;";
+	    connect.execQuery(query);
+
+	    try {
+	        while (connect.rs.next()) {
+
+	            Integer transactionID      = connect.rs.getInt("transactionID");
+	            Integer serviceID          = connect.rs.getInt("serviceID");
+	            Integer customerID         = connect.rs.getInt("customerID");
+	            Integer receptionistID     = connect.rs.getInt("receptionistID");
+	            Integer laundryStaffID     = connect.rs.getInt("laundryStaffID");
+	            Date transactionDate       = connect.rs.getDate("transactionDate");
+	            String transactionStatus   = connect.rs.getString("transactionStatus");
+	            Double totalWeight         = connect.rs.getDouble("totalWeight");
+	            String transactionNotes    = connect.rs.getString("notes");
+
+	            // Create Transaction object
+	            Transaction trx = new Transaction(transactionID,serviceID,customerID,receptionistID,laundryStaffID,transactionDate,transactionStatus,totalWeight,transactionNotes);
+
+	            list.add(trx);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
+
 	
 	public void updateTransactionStatus(String transactionID, String status) {
-		
+		String query = "UPDATE transaction SET transactionStatus = ? WHERE transactionID = ?";
+
+	    try {
+	        PreparedStatement ps = connect.preparedStatement(query);
+	        ps.setString(1, status);
+	        ps.setString(2, transactionID);
+
+	        ps.executeUpdate();
+	        ps.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public List<Transaction> getAssignedOrderByLaundryStaffID(Integer LaundryStaffID) {
-		
-		
-		
-		//return list
-		return null;
+		List<Transaction> list = new ArrayList<>();
+
+	    String query = "SELECT * FROM transaction WHERE laundryStaffID = ?";
+
+	    try {
+	        PreparedStatement ps = connect.preparedStatement(query);
+	        ps.setInt(1, laundryStaffID);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+
+	            Integer transactionID      = rs.getInt("transactionID");
+	            Integer serviceID          = rs.getInt("serviceID");
+	            Integer customerID         = rs.getInt("customerID");
+	            Integer receptionistID     = rs.getInt("receptionistID");
+	            Integer staffID            = rs.getInt("laundryStaffID");
+	            Date transactionDate       = rs.getDate("transactionDate");
+	            String transactionStatus   = rs.getString("transactionStatus");
+	            Double totalWeight         = rs.getDouble("totalWeight");
+	            String transactionNotes    = rs.getString("notes");
+
+	            Transaction trx = new Transaction(transactionID,serviceID,customerID,receptionistID,staffID,transactionDate,transactionStatus,totalWeight,transactionNotes
+	            );
+
+	            list.add(trx);
+	        }
+
+	        rs.close();
+	        ps.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
 	}
 	
 	public void assignOrderToLaundryStaff(Integer transactionID,Integer receptionistID, Integer laundryStaffID) {
+		 String query = "UPDATE transaction "+ "SET receptionistID = ?, laundryStaffID = ?, transactionStatus = 'Assigned' "
+                 + "WHERE transactionID = ?";
+
+		    try {
+		        PreparedStatement ps = connect.preparedStatement(query);
+		        ps.setInt(1, receptionistID);
+		        ps.setInt(2, laundryStaffID);
+		        ps.setInt(3, transactionID);
 		
+		        ps.executeUpdate();
+		        ps.close();
+		
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
 	}
 	
 	public void orderLaundryService(Integer serviceID,Integer customerID, Double totalWeight, String notes ) {
@@ -123,8 +230,40 @@ public class Transaction {
 	public List<Transaction> getTransactionsByCustomerID(Integer customerID){
 		
 		
-		//return list
-		return null;
+		List<Transaction> list = new ArrayList<>();
+
+	    String query = "SELECT * FROM transaction WHERE customerID = ?";
+
+	    try {
+	        PreparedStatement ps = connect.preparedStatement(query);
+	        ps.setInt(1, customerID);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+
+	            Integer transactionID      = rs.getInt("transactionID");
+	            Integer serviceID          = rs.getInt("serviceID");
+	            Integer receptionistID     = rs.getInt("receptionistID");
+	            Integer staffID            = rs.getInt("laundryStaffID");
+	            Date transactionDate       = rs.getDate("transactionDate");
+	            String transactionStatus   = rs.getString("transactionStatus");
+	            Double totalWeight         = rs.getDouble("totalWeight");
+	            String transactionNotes    = rs.getString("notes");
+
+	            Transaction trx = new Transaction(transactionID,serviceID,customerID,receptionistID,staffID,transactionDate,transactionStatus,totalWeight,transactionNotes);
+
+	            list.add(trx);
+	        }
+
+	        rs.close();
+	        ps.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
 	}
 	
 	

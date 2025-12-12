@@ -49,6 +49,19 @@ public class Notification {
 	public void setIsRead(Boolean isRead) {
 		this.isRead = isRead;
 	}
+	
+	
+	public Notification(Integer notificationID, Integer recipientID, String notificationMessage, Date createdAt,
+			Boolean isRead) {
+		super();
+		this.notificationID = notificationID;
+		this.recipientID = recipientID;
+		this.notificationMessage = notificationMessage;
+		this.createdAt = createdAt;
+		this.isRead = isRead;
+	}
+	
+	
 
 	public void sendNotification(Integer recipientID, String message) {
 		

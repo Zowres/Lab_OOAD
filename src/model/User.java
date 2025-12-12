@@ -121,7 +121,7 @@ public class User{
 	
 		User user = null;
 
-	    String query = "SELECT * FROM Users WHERE userEmail = '" + email + "' AND userPassword = '" + password + "';";
+	    String query = "SELECT * FROM users WHERE userEmail = '" + email + "' AND userPassword = '" + password + "';";
 
 	    connect.execQuery(query);
 
@@ -149,7 +149,7 @@ public class User{
 	public List<User> getUserByRole(String role){
 		 List<User> list = new ArrayList<>();
 
-		    String query = "SELECT * FROM Users WHERE userRole LIKE 'Employee' " +
+		    String query = "SELECT * FROM users WHERE userRole LIKE 'Employee' " +
 		                   "OR userRole LIKE 'Receptionist' " +
 		                   "OR userRole LIKE 'LaundryStaff';";
 
@@ -181,7 +181,7 @@ public class User{
 	public User getUserByEmail(String email) {
 		User user = null;
 
-	    String query = "SELECT * FROM Users WHERE userEmail = '" + email + "';";
+	    String query = "SELECT * FROM users WHERE userEmail = '" + email + "';";
 	    connect.execQuery(query);
 
 	    try {
@@ -206,7 +206,7 @@ public class User{
 	public User getUserByName(String name) {
 		User user = null;
 
-	    String query = "SELECT * FROM Users WHERE userName = '" + name + "';";
+	    String query = "SELECT * FROM users WHERE userName = '" + name + "';";
 	    connect.execQuery(query);
 
 	    try {
