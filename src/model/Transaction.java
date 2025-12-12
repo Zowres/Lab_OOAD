@@ -224,7 +224,30 @@ public class Transaction {
 	}
 	
 	public void orderLaundryService(Integer serviceID,Integer customerID, Double totalWeight, String notes ) {
-		
+		String query = "INSERT INTO Transactions (serviceID, customerID, receptionistID, laundryStaffID, "
+	            + "transactionDate, transactionStatus, totalWeight, notes) "
+	            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+	    try {
+	        PreparedStatement ps = connect.preparedStatement(query);
+	        ps.setInt(1, serviceID);
+	        ps.setInt(2, customerID);
+
+	        ps.setNull(3, java.sql.Types.INTEGER); 
+	        ps.setNull(4, java.sql.Types.INTEGER); 
+
+	        ps.setDate(5, new java.sql.Date(System.currentTimeMillis())); 
+	        ps.setString(6, "Pending");                                   
+
+	        ps.setDouble(7, totalWeight);
+	        ps.setString(8, notes);
+
+	        ps.executeUpdate();
+	        ps.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public List<Transaction> getTransactionsByCustomerID(Integer customerID){
