@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import model.User;
 
 public class LoginPage {
 	
@@ -42,7 +43,7 @@ public class LoginPage {
 		userCon = new UserController();
 		init();
 		layout();
-//		action();
+		action();
 		
 	}
 	
@@ -74,10 +75,44 @@ public class LoginPage {
 		vBox.getChildren().addAll(titleLbl, form, errorLbl, regisRedirect);
 		borderPane.setCenter(vBox);
 		scene = new Scene(borderPane, 500, 500);
+	
+	}
+	
+	private void action() {
+		loginBtn.setOnAction(e -> {
+			
+			errorLbl.setText("");
+			
+			String email = emailTf.getText();
+			String password = passwordPf.getText();
+			
+			if(email.isEmpty() || password.isEmpty()) {
+				errorLbl.setText("All fields must be filled");
+				return;
+			}
+			
+			User user = userCon.login(email, password);
+			
+			if(user != null) {
+				String role = user.getUserRole();
+				if(role.equalsIgnoreCase("admin")) {
+					ViewManager.getInstance().switchScene(new AdminPage(user).getScene());
+				}
+				else if(role.equalsIgnoreCase("customer")) {
+					ViewManager.getInstance().switchScene(new CustomerPage(user).getScene());
+				}
+				else {
+					errorLbl.setText("Role undefined");
+				}
+			}
+			else {
+				errorLbl.setText("Credentials do not match!");
+			}
+		});
 		
-		
-		
-		
+		regisRedirect.setOnAction(e -> {
+			ViewManager.getInstance().switchScene(new RegisterPage().getScene());
+		});
 	}
 
 }
