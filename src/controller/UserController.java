@@ -45,7 +45,7 @@ public class UserController {
 			return "Password must be same!";
 		}
 		
-		if(! (gender.equals("Male") || gender.equals("Female"))) {
+		if(!(gender.equals("Male") || gender.equals("Female"))) {
 			return "gender must Male or Female";
 		}
 		
@@ -60,7 +60,7 @@ public class UserController {
 		role = "Customer";
 		
 		
-		userModel.addUser(name, email, confirmPassword, gender, dob, role);
+//		userModel.addUser(name, email, confirmPassword, gender, dob, role);
 		
 		
 		return "Success Registered";

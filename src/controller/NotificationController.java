@@ -36,15 +36,16 @@ public class NotificationController {
 	
 	public Notification getNotificationByID(Integer notificationID) {
 		
-		return null;
+		return notifModel.getNotificationByID(notificationID);
 	}
 	
 	public void deleteNotification(Integer notificationID) {
 		
+		notifModel.deleteNotification(notificationID);
 	}
 	
 	public void markAsRead(Integer notificationID) {
-		
+		notifModel.markAsRead(notificationID);
 	}
 	
 	public Boolean validateIsRead(String notification) {
