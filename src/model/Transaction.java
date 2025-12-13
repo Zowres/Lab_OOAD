@@ -150,13 +150,13 @@ public class Transaction {
 	}
 
 	
-	public void updateTransactionStatus(String transactionID, String status) {
+	public void updateTransactionStatus(Integer transactionID, String status) {
 		String query = "UPDATE transaction SET transactionStatus = ? WHERE transactionID = ?";
 
 	    try {
 	        PreparedStatement ps = connect.preparedStatement(query);
 	        ps.setString(1, status);
-	        ps.setString(2, transactionID);
+	        ps.setInt(2, transactionID);
 
 	        ps.executeUpdate();
 	        ps.close();
@@ -224,7 +224,7 @@ public class Transaction {
 	}
 	
 	public void orderLaundryService(Integer serviceID,Integer customerID, Double totalWeight, String notes ) {
-		String query = "INSERT INTO Transactions (serviceID, customerID, receptionistID, laundryStaffID, "
+		String query = "INSERT INTO transaction (serviceID, customerID, receptionistID, laundryStaffID, "
 	            + "transactionDate, transactionStatus, totalWeight, notes) "
 	            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -289,6 +289,45 @@ public class Transaction {
 	    return list;
 	}
 	
+	public List<Transaction> getTransactionsByStatus(String status){
+		
+		
+		List<Transaction> list = new ArrayList<>();
+
+	    String query = "SELECT * FROM transaction WHERE transactionStatus = ?";
+
+	    try {
+	        PreparedStatement ps = connect.preparedStatement(query);
+	        ps.setString(1, status);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+
+	            Integer transactionID      = rs.getInt("transactionID");
+	            Integer serviceID          = rs.getInt("serviceID");
+	            Integer customerID		   = rs.getInt("customerID");
+	            Integer receptionistID     = rs.getInt("receptionistID");
+	            Integer staffID            = rs.getInt("laundryStaffID");
+	            Date transactionDate       = rs.getDate("transactionDate");
+	            String transactionStatus   = rs.getString("transactionStatus");
+	            Double totalWeight         = rs.getDouble("totalWeight");
+	            String transactionNotes    = rs.getString("notes");
+
+	            Transaction trx = new Transaction(transactionID,serviceID,customerID,receptionistID,staffID,transactionDate,transactionStatus,totalWeight,transactionNotes);
+
+	            list.add(trx);
+	        }
+
+	        rs.close();
+	        ps.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return list;
+	}
 	
 	
 }

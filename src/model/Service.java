@@ -140,7 +140,6 @@ public class Service {
 	            s.setServiceDescription(rs.getString("description"));
 	            s.setServicePrice(rs.getDouble("price"));
 
-	            // Duration stored as seconds -> convert to days
 	            int seconds = rs.getInt("duration_seconds");
 	            int days = seconds / (24 * 60 * 60);
 	            s.setServiceDuration(days);
