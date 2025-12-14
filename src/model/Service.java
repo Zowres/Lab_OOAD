@@ -104,7 +104,7 @@ public class Service {
 	}
 	
 	public void deleteService(Integer serviceID) {
-		String query = "DELETE FROM services WHERE serviceID = ?";
+		String query = "DELETE FROM service WHERE serviceID = ?";
 		try {
 	        PreparedStatement ps = Connect.getInstance().preparedStatement(query);
 	        ps.setInt(1, serviceID);
@@ -125,7 +125,7 @@ public class Service {
 	public List<Service> getAllServices(){
 		List<Service> list = new ArrayList<Service>();
 
-	    String query = "SELECT * FROM services";
+	    String query = "SELECT * FROM service";
 
 	    try {
 	        PreparedStatement ps = Connect.getInstance().preparedStatement(query);

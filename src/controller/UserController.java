@@ -65,7 +65,7 @@ public class UserController {
 		role = "Customer";
 		
 		
-//		userModel.addUser(name, email, confirmPassword, gender, dob, role);
+		userModel.addUser(name, email, confirmPassword, gender, dob, role);
 		
 		
 		return "Success Registered";

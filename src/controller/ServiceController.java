@@ -7,6 +7,11 @@ import model.Service;
 public class ServiceController {
 	Service serviceModel;
 	
+	
+	public ServiceController() {
+		this.serviceModel = new Service();
+	}
+	
 	public void addService(String name, String description, Double price, Integer duration) {
 		serviceModel.addService(name, description, price, duration);
 	}

@@ -69,6 +69,10 @@ public class Notification {
 		this.isRead = isRead;
 	}
 	
+	public Notification() {
+		
+	}
+	
 	
 
 	public void sendNotification(Integer recipientID, String message) {

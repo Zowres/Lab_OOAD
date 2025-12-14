@@ -9,6 +9,9 @@ public class NotificationController {
 	
 	Notification notifModel;
 	
+	public NotificationController() {
+		this.notifModel = new Notification();
+	}
 	
 	public void sendNotification(Integer recipientID, String message) {
 		if (recipientID == null) {

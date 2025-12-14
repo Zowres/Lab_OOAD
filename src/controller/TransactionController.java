@@ -5,7 +5,11 @@ import java.util.List;
 import model.Transaction;
 
 public class TransactionController {
-	Transaction transactionModel = new Transaction();
+	Transaction transactionModel;
+	
+	public TransactionController() {
+		this.transactionModel = new Transaction();
+	}
 	
 	
 	public List<Transaction> getAllTransactions() {
@@ -37,7 +41,7 @@ public class TransactionController {
 		String validate = validateOrder(totalWeight, notes);
 		
 		if(validate == null) {
-			transactionModel.orderLaundryService(null, null, totalWeight, notes);
+//			transactionModel.orderLaundryService(null, null, totalWeight, notes);
 		}
 		else {
 			//disini set aja error message
