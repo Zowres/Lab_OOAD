@@ -27,6 +27,9 @@ public class TransactionController {
 	}
 	
 	public List<Transaction> getAssignedOrdersByLaundryStaffID(Integer laundryStaffID) {
+		if(laundryStaffID == null) {
+			return null;
+		}
 		return transactionModel.getAssignedOrderByLaundryStaffID(laundryStaffID);
 	}
 	

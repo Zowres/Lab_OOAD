@@ -101,6 +101,12 @@ public class LoginPage {
 				else if(role.equalsIgnoreCase("customer")) {
 					ViewManager.getInstance().switchScene(new CustomerPage(user).getScene());
 				}
+				else if(role.equalsIgnoreCase("laundrystaff")) {
+					ViewManager.getInstance().switchScene(new LaundryStaffPage(user).getScene());
+				}
+				else if(role.equalsIgnoreCase("receptionist")) {
+					ViewManager.getInstance().switchScene(new ReceptionistPage(user).getScene());
+				}
 				else {
 					errorLbl.setText("Role undefined");
 				}
