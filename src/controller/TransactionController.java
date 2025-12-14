@@ -55,11 +55,11 @@ public class TransactionController {
 	
 	public String validateOrder(Double totalWeight, String notes) {
 		
-		if(totalWeight < 2 || totalWeight > 50) {
+		if(totalWeight < 1 || totalWeight > 51) {
 			return "Total weight must between 2 kg and 50 kg.";
 		}
 		
-		if(notes.length() > 250) {
+		if(notes.length() > 251) {
 			return "Notes must be less than or equal 250 characters";
 		}
 		

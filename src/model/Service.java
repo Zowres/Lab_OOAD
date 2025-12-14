@@ -59,7 +59,7 @@ public class Service {
 	}
 
 	public void addService(String name, String description, Double price, Integer duration) {
-		 String query = "INSERT INTO service (name, description, price, duration_seconds) VALUES (?, ?, ?, ?)";
+		 String query = "INSERT INTO service (serviceName, serviceDescription, servicePrice, serviceDuration) VALUES (?, ?, ?, ?)";
 
 		    try {
 		        PreparedStatement ps = Connect.getInstance().preparedStatement(query);
@@ -136,11 +136,11 @@ public class Service {
 	            Service s = new Service();
 
 	            s.setServiceID(rs.getInt("serviceID"));
-	            s.setServiceName(rs.getString("name"));
-	            s.setServiceDescription(rs.getString("description"));
-	            s.setServicePrice(rs.getDouble("price"));
+	            s.setServiceName(rs.getString("serviceName"));
+	            s.setServiceDescription(rs.getString("serviceDescription"));
+	            s.setServicePrice(rs.getDouble("servicePrice"));
 
-	            int seconds = rs.getInt("duration_seconds");
+	            int seconds = rs.getInt("serviceDuration");
 	            int days = seconds / (24 * 60 * 60);
 	            s.setServiceDuration(days);
 

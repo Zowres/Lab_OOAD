@@ -57,9 +57,16 @@ public class ServiceController {
 			return "description length must be less than or equal to 250";
 		}
 		
+		if(price == null) {
+			return "Please fill the price";
+		}
 		
 		if(price < 0) {
 			return "Price must greater than 0";
+		}
+		
+		if(duration == null) {
+			return "Please fill the duration";
 		}
 		
 		

@@ -15,8 +15,10 @@ public class UserController {
 	
 	public UserController() {
 		this.userModel = new User();
-       
+        this.employeeModel = new Employee();
 	}
+	
+	
 
 	
 	//untuk ngebalikin error message harusnya pake string
