@@ -11,6 +11,7 @@ import model.Transaction;
 import model.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LaundryStaffPage {
 
@@ -23,9 +24,10 @@ public class LaundryStaffPage {
     private TransactionController transactionController;
 
     private TableView<Transaction> assignedTable;
+    private TableView<Transaction> finishedTable;
     private Button btnFinish;
     private Transaction selectedTransaction;
-    private Label messageLabel;  // For messages
+    private Label messageLabel;
 
     public LaundryStaffPage(User laundryStaff) {
         this.laundryStaff = laundryStaff;
@@ -35,7 +37,7 @@ public class LaundryStaffPage {
         setupTabs();
         loadInitialData();
 
-        scene = new Scene(root, 900, 650);
+        scene = new Scene(root, 1000, 700);
     }
 
     private void initializeUI() {
@@ -60,41 +62,31 @@ public class LaundryStaffPage {
     }
 
     private void setupTabs() {
-        Tab tabAssignedOrders = new Tab("My Assigned Orders");
-        tabAssignedOrders.setClosable(false);
-        tabAssignedOrders.setContent(createAssignedOrdersTab());
+        Tab tabAssigned = new Tab("Assigned Orders");
+        tabAssigned.setClosable(false);
+        tabAssigned.setContent(createAssignedOrdersTab());
 
-        tabPane.getTabs().add(tabAssignedOrders);
+        Tab tabFinished = new Tab("Finished Orders");
+        tabFinished.setClosable(false);
+        tabFinished.setContent(createFinishedOrdersTab());
+
+        tabPane.getTabs().addAll(tabAssigned, tabFinished);
     }
 
     private VBox createAssignedOrdersTab() {
         VBox vbox = new VBox(20);
         vbox.setPadding(new Insets(30));
 
-        Label title = new Label("My Assigned Laundry Orders");
+        Label title = new Label("Currently Assigned Orders");
         title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         assignedTable = new TableView<>();
         assignedTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        assignedTable.setPlaceholder(new Label("No orders assigned to you yet."));
+        assignedTable.setPlaceholder(new Label("No orders currently assigned to you."));
 
-        TableColumn<Transaction, Integer> idCol = new TableColumn<>("Order ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("transactionID"));
+        setupTransactionColumns(assignedTable);
 
-        TableColumn<Transaction, String> dateCol = new TableColumn<>("Order Date");
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
-
-        TableColumn<Transaction, Double> weightCol = new TableColumn<>("Weight (kg)");
-        weightCol.setCellValueFactory(new PropertyValueFactory<>("totalWeight"));
-
-        TableColumn<Transaction, String> notesCol = new TableColumn<>("Notes");
-        notesCol.setCellValueFactory(new PropertyValueFactory<>("transactionNotes"));
-
-        TableColumn<Transaction, String> statusCol = new TableColumn<>("Current Status");
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("transactionStatus"));
-
-        assignedTable.getColumns().addAll(idCol, dateCol, weightCol, notesCol, statusCol);
-
+        // Selection for "Mark as Finished"
         assignedTable.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
             selectedTransaction = newVal;
             btnFinish.setDisable(newVal == null);
@@ -120,7 +112,10 @@ public class LaundryStaffPage {
 
         Button btnRefresh = new Button("Refresh");
         btnRefresh.setStyle("-fx-background-color: #337ab7; -fx-text-fill: white;");
-        btnRefresh.setOnAction(e -> loadAssignedOrders());
+        btnRefresh.setOnAction(e -> {
+            loadAssignedOrders();
+            loadFinishedOrders();
+        });
 
         HBox buttonBox = new HBox(15, btnFinish, btnRefresh);
         buttonBox.setAlignment(Pos.CENTER);
@@ -135,10 +130,51 @@ public class LaundryStaffPage {
         return vbox;
     }
 
+    private VBox createFinishedOrdersTab() {
+        VBox vbox = new VBox(20);
+        vbox.setPadding(new Insets(30));
+
+        Label title = new Label("Completed Orders");
+        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+
+        finishedTable = new TableView<>();
+        finishedTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        finishedTable.setPlaceholder(new Label("No finished orders yet."));
+
+        setupTransactionColumns(finishedTable);
+
+        vbox.getChildren().addAll(title, finishedTable);
+
+        return vbox;
+    }
+
+    private void setupTransactionColumns(TableView<Transaction> table) {
+        TableColumn<Transaction, Integer> idCol = new TableColumn<>("Order ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("transactionID"));
+
+        TableColumn<Transaction, String> dateCol = new TableColumn<>("Order Date");
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
+
+        TableColumn<Transaction, Double> weightCol = new TableColumn<>("Weight (kg)");
+        weightCol.setCellValueFactory(new PropertyValueFactory<>("totalWeight"));
+
+        TableColumn<Transaction, String> notesCol = new TableColumn<>("Notes");
+        notesCol.setCellValueFactory(new PropertyValueFactory<>("transactionNotes"));
+
+        TableColumn<Transaction, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("transactionStatus"));
+
+        table.getColumns().addAll(idCol, dateCol, weightCol, notesCol, statusCol);
+    }
+
     private void loadInitialData() {
         tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-            if (newTab != null && "My Assigned Orders".equals(newTab.getText())) {
-                loadAssignedOrders();
+            if (newTab != null) {
+                if ("Assigned Orders".equals(newTab.getText())) {
+                    loadAssignedOrders();
+                } else if ("Finished Orders".equals(newTab.getText())) {
+                    loadFinishedOrders();
+                }
             }
         });
     }
@@ -146,18 +182,37 @@ public class LaundryStaffPage {
     private void loadAssignedOrders() {
         Integer staffID = laundryStaff.getUserID();
         if (staffID == null) {
-            showMessage("Error: User ID is missing. Please log in again.", "red");
-            assignedTable.setItems(FXCollections.emptyObservableList());
+            showMessage("Error: User session invalid.", "red");
             return;
         }
-        System.out.println(laundryStaff.getUserID());
-        List<Transaction> assigned = transactionController.getAssignedOrdersByLaundryStaffID(staffID);
-        if (assigned != null && !assigned.isEmpty()) {
+
+        List<Transaction> allAssigned = transactionController.getAssignedOrdersByLaundryStaffID(staffID);
+        List<Transaction> assigned = allAssigned.stream()
+                .filter(t -> "Assigned".equals(t.getTransactionStatus()))
+                .collect(Collectors.toList());
+
+        if (!assigned.isEmpty()) {
             assignedTable.setItems(FXCollections.observableArrayList(assigned));
-            showMessage("", "");  // Clear message
+            showMessage("", "");
         } else {
             assignedTable.setItems(FXCollections.emptyObservableList());
-            showMessage("No orders assigned to you yet.", "gray");
+            showMessage("No active orders assigned to you.", "gray");
+        }
+    }
+
+    private void loadFinishedOrders() {
+        Integer staffID = laundryStaff.getUserID();
+        if (staffID == null) return;
+
+        List<Transaction> allAssigned = transactionController.getAssignedOrdersByLaundryStaffID(staffID);
+        List<Transaction> finished = allAssigned.stream()
+                .filter(t -> "Finished".equals(t.getTransactionStatus()))
+                .collect(Collectors.toList());
+
+        if (!finished.isEmpty()) {
+            finishedTable.setItems(FXCollections.observableArrayList(finished));
+        } else {
+            finishedTable.setItems(FXCollections.emptyObservableList());
         }
     }
 

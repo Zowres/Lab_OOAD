@@ -35,6 +35,8 @@ public class AdminPage {
     private Button btnEditService;
     private Button btnDeleteService;
     private Service selectedService;
+    
+    private Label messageLabel;
 
     public AdminPage(User user) {
         this.user = user;
@@ -225,7 +227,7 @@ public class AdminPage {
         setupTransactionColumns(finishedTable);
 
         Button btnSendNotif = new Button("Send Notification to Customer");
-        btnSendNotif.setStyle("-fx-background-color: #337ab7; -fx-text-fill: white;");
+        btnSendNotif.setStyle("-fx-background-color: #337ab7; -fx-text-fill: white; -fx-font-size: 16px;");
         btnSendNotif.setOnAction(e -> {
             Transaction selected = finishedTable.getSelectionModel().getSelectedItem();
             if (selected != null && selected.getCustomerID() != null) {
@@ -233,13 +235,19 @@ public class AdminPage {
                     selected.getCustomerID(),
                     "Your laundry order (ID: " + selected.getTransactionID() + ") is finished and ready for pickup!"
                 );
-                showMessage(vbox, "Notification sent to customer!", "green");
+                showMessage("Notification sent to customer!", "green");
             } else {
-                showMessage(vbox, "Please select a finished transaction.", "red");
+                showMessage("Please select a finished transaction.", "red");
             }
         });
 
-        vbox.getChildren().addAll(title, allTable, finishedTitle, finishedTable, btnSendNotif);
+        // Dedicated message label
+        messageLabel = new Label();
+        messageLabel.setStyle("-fx-font-size: 14px;");
+        messageLabel.setAlignment(Pos.CENTER);
+        messageLabel.setMaxWidth(Double.MAX_VALUE);
+
+        vbox.getChildren().addAll(title, allTable, finishedTitle, finishedTable, btnSendNotif, messageLabel);
 
         // Load data when tab selected
         tabViewTransactions.setOnSelectionChanged(e -> {
@@ -307,6 +315,18 @@ public class AdminPage {
         } else {
             table.setItems(FXCollections.emptyObservableList());
         }
+    }
+    private void showMessage(String text, String color) {
+        messageLabel.setText(text);
+        messageLabel.setStyle("-fx-text-fill: " + color + "; -fx-font-weight: bold; -fx-font-size: 14px;");
+
+        // Auto clear after 3 seconds
+        new java.util.Timer().schedule(new java.util.TimerTask() {
+            @Override
+            public void run() {
+                javafx.application.Platform.runLater(() -> messageLabel.setText(""));
+            }
+        }, 3000);
     }
 
     private void showMessage(VBox parent, String text, String color) {
