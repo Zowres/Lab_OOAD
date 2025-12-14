@@ -127,11 +127,9 @@ public class AddEmployeePage {
                     role
             );
 
-            // Display result from controller
             msgLabel.setText(result);
             if (result != null && result.toLowerCase().contains("success")) {
                 msgLabel.setStyle("-fx-text-fill: green; -fx-font-size: 14px; -fx-font-weight: bold;");
-                // Clear fields on success
                 tfName.clear();
                 tfEmail.clear();
                 pfPassword.clear();

@@ -41,7 +41,7 @@ public class TransactionController {
 		String validate = validateOrder(totalWeight, notes);
 		
 		if(validate == null) {
-//			transactionModel.orderLaundryService(null, null, totalWeight, notes);
+			transactionModel.orderLaundryService(serviceID, customerID, totalWeight, notes);
 		}
 		else {
 			//disini set aja error message
@@ -57,6 +57,10 @@ public class TransactionController {
 		
 		if(totalWeight < 1 || totalWeight > 51) {
 			return "Total weight must between 2 kg and 50 kg.";
+		}
+		
+		if(notes.isEmpty() || notes == null) {
+			return null;
 		}
 		
 		if(notes.length() > 251) {

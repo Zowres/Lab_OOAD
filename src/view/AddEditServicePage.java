@@ -75,7 +75,6 @@ public class AddEditServicePage {
         msgLabel.setMaxWidth(400);
         msgLabel.setAlignment(Pos.CENTER);
 
-        // Pre-fill fields if editing
         if (isEdit) {
             tfName.setText(service.getServiceName());
             taDescription.setText(service.getServiceDescription());
@@ -128,7 +127,6 @@ public class AddEditServicePage {
             String result;
 
             if (isEdit) {
-                // Call edit validation
             	System.out.println(service.getServiceID());
                 result = serviceController.validateEditService(
                         service.getServiceID(),
@@ -138,7 +136,6 @@ public class AddEditServicePage {
                         durationSeconds
                 );
             } else {
-                // Call add validation
                 result = serviceController.validateAddService(
                         name,
                         description,

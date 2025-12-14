@@ -108,6 +108,11 @@ public class Transaction {
 		this.transactionDate = transactionDate;
 		this.transactionStatus = transactionStatus;
 		this.totalWeight = totalWeight;
+		
+		if(transactionNotes == null) {
+			transactionNotes = "";
+		}
+		
 		this.transactionNotes = transactionNotes;
 	}
 	

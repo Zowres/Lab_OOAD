@@ -112,7 +112,6 @@ public class CustomerPage {
 
         serviceTable.getColumns().addAll(nameCol, descCol, priceCol, durationCol);
 
-        // Selection listener
         serviceTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             selectedService = newVal;
             btnPlaceOrder.setDisable(newVal == null);
@@ -121,7 +120,7 @@ public class CustomerPage {
         btnPlaceOrder = new Button("Place Order");
         btnPlaceOrder.setStyle("-fx-background-color: #5cb85c; -fx-text-fill: white; -fx-font-size: 16px;");
         btnPlaceOrder.setPrefWidth(200);
-        btnPlaceOrder.setDisable(true); // disabled until service selected
+        btnPlaceOrder.setDisable(true); 
 
         btnPlaceOrder.setOnAction(e -> {
             if (selectedService != null) {
@@ -176,7 +175,7 @@ public class CustomerPage {
         statusCol.setCellValueFactory(new PropertyValueFactory<>("transactionStatus"));
 
         TableColumn<Transaction, String> notesCol = new TableColumn<>("Notes");
-        notesCol.setCellValueFactory(new PropertyValueFactory<>("notes"));
+        notesCol.setCellValueFactory(new PropertyValueFactory<>("transactionNotes"));
 
         table.getColumns().addAll(idCol, dateCol, weightCol, statusCol, notesCol);
 
