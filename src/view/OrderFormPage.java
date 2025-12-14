@@ -92,7 +92,6 @@ public class OrderFormPage {
 
             String notes = taNotes.getText();
 
-            // Call controller
             transactionController.orderLaundryService(
                     service.getServiceID(),
                     user.getUserID(),

@@ -76,7 +76,7 @@ public class Notification {
 	
 
 	public void sendNotification(Integer recipientID, String message) {
-		String query = "INSERT INTO Notifications (recipientID, notificationMessage, createdAt, isRead) "
+		String query = "INSERT INTO notification (recipientID, notificationMessage, createdAt, isRead) "
                 + "VALUES (?, ?, ?, ?)";
 
 		try {
@@ -137,7 +137,7 @@ public class Notification {
 	public Notification getNotificationByID(Integer notificationID) {
 		Notification notif = null;
 
-	    String query = "SELECT * FROM Notifications WHERE notificationID = ?";
+	    String query = "SELECT * FROM notification WHERE notificationID = ?";
 
 	    try {
 	        PreparedStatement ps = connect.preparedStatement(query);
@@ -173,7 +173,7 @@ public class Notification {
 	}
 	
 	public void deleteNotification (Integer notificationID) {
-		String query = "DELETE FROM Notifications WHERE notificationID = ?";
+		String query = "DELETE FROM notification WHERE notificationID = ?";
 
 	    try {
 	        PreparedStatement ps = connect.preparedStatement(query);

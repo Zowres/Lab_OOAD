@@ -112,8 +112,6 @@ public class LaundryStaffPage {
                         "Finished"
                 );
 
-                loadAssignedOrders();
-
                 showMessage("Order #" + selectedTransaction.getTransactionID() + " marked as Finished!", "green");
 
                 assignedTable.getSelectionModel().clearSelection();
@@ -152,7 +150,7 @@ public class LaundryStaffPage {
             assignedTable.setItems(FXCollections.emptyObservableList());
             return;
         }
-
+        System.out.println(laundryStaff.getUserID());
         List<Transaction> assigned = transactionController.getAssignedOrdersByLaundryStaffID(staffID);
         if (assigned != null && !assigned.isEmpty()) {
             assignedTable.setItems(FXCollections.observableArrayList(assigned));

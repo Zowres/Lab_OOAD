@@ -30,7 +30,6 @@ public class NotificationDetailPage {
     private void initializeUI() {
         BorderPane root = new BorderPane();
 
-        // Top: Back button and title
         Button btnBack = new Button("← Back to Notifications");
         btnBack.setStyle("-fx-font-size: 14px; -fx-padding: 8 16;");
         btnBack.setOnAction(e -> 
@@ -46,7 +45,6 @@ public class NotificationDetailPage {
         topBox.setPadding(new Insets(20));
         root.setTop(topBox);
 
-        // Center: Notification content
         VBox contentBox = new VBox(20);
         contentBox.setPadding(new Insets(40));
         contentBox.setAlignment(Pos.TOP_LEFT);
@@ -67,7 +65,6 @@ public class NotificationDetailPage {
 
         contentBox.getChildren().addAll(messageLabel, dateLabel, statusLabel);
 
-        // Bottom: Action buttons
         Button btnMarkAsRead = new Button("Mark as Read");
         btnMarkAsRead.setStyle("-fx-background-color: #5cb85c; -fx-text-fill: white; -fx-font-size: 14px;");
         btnMarkAsRead.setPrefWidth(150);
@@ -80,7 +77,6 @@ public class NotificationDetailPage {
         actionMsg.setStyle("-fx-font-size: 14px;");
         actionMsg.setWrapText(true);
 
-        // Action: Mark as Read
         btnMarkAsRead.setOnAction(e -> {
             notificationController.markAsRead(notification.getNotificationID());
             actionMsg.setText("Notification marked as read.");
@@ -89,13 +85,11 @@ public class NotificationDetailPage {
             statusLabel.setStyle("-fx-text-fill: #888; -fx-font-weight: bold;");
         });
 
-        // Action: Delete
         btnDelete.setOnAction(e -> {
             notificationController.deleteNotification(notification.getNotificationID());
             actionMsg.setText("Notification deleted successfully.");
             actionMsg.setStyle("-fx-text-fill: green;");
 
-            // Auto return to customer page after delete
             new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override

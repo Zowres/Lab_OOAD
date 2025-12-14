@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import model.Transaction;
 import model.User;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,7 @@ public class ReceptionistPage {
         tabAssignOrders.setClosable(false);
         tabAssignOrders.setContent(createAssignOrdersTab());
 
-        tabPane.getTabs().add(tabAssignOrders);  // Only once
+        tabPane.getTabs().add(tabAssignOrders);
     }
 
     private VBox createAssignOrdersTab() {
@@ -92,7 +93,7 @@ public class ReceptionistPage {
         TableColumn<Transaction, Integer> pendIdCol = new TableColumn<>("ID");
         pendIdCol.setCellValueFactory(new PropertyValueFactory<>("transactionID"));
 
-        TableColumn<Transaction, String> pendDateCol = new TableColumn<>("Date");
+        TableColumn<Transaction, Date> pendDateCol = new TableColumn<>("Date");
         pendDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
 
         TableColumn<Transaction, Double> pendWeightCol = new TableColumn<>("Weight (kg)");
@@ -146,9 +147,6 @@ public class ReceptionistPage {
                         selectedStaff.getUserID()
                 );
 
-                loadPendingTransactions();
-                loadLaundryStaff();
-
                 showMessage("Order #" + selectedTransaction.getTransactionID() + 
                            " assigned successfully to " + selectedStaff.getUserName() + "!", "green");
 
@@ -168,7 +166,6 @@ public class ReceptionistPage {
         HBox buttonBox = new HBox(15, btnAssign, btnRefresh);
         buttonBox.setAlignment(Pos.CENTER);
 
-        // Message label
         messageLabel = new Label();
         messageLabel.setStyle("-fx-font-size: 14px;");
         messageLabel.setAlignment(Pos.CENTER);

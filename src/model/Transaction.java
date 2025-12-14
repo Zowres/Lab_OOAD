@@ -157,6 +157,8 @@ public class Transaction {
 	
 	public void updateTransactionStatus(Integer transactionID, String status) {
 		String query = "UPDATE transaction SET transactionStatus = ? WHERE transactionID = ?";
+		
+		
 
 	    try {
 	        PreparedStatement ps = connect.preparedStatement(query);
@@ -173,12 +175,14 @@ public class Transaction {
 	
 	public List<Transaction> getAssignedOrderByLaundryStaffID(Integer LaundryStaffID) {
 		List<Transaction> list = new ArrayList<>();
-
+		if (LaundryStaffID == null) {
+	        return list; 
+	    }
 	    String query = "SELECT * FROM transaction WHERE laundryStaffID = ?";
 
 	    try {
 	        PreparedStatement ps = connect.preparedStatement(query);
-	        ps.setInt(1, laundryStaffID);
+	        ps.setInt(1, LaundryStaffID);
 
 	        ResultSet rs = ps.executeQuery();
 
