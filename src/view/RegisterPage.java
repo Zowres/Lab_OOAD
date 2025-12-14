@@ -123,9 +123,11 @@ public class RegisterPage {
             	utilDate = new java.util.Date();
             }
 
-            String result = userController.addUser(name, email, pass, confPass, gender, utilDate, "Customer");
+            String result = userController.validateAddCustomer(name, email, pass, confPass, gender, utilDate);
             
             lblMsg.setText(result);
+            
+            
             if(result.equals("Success Registered")) {
                 lblMsg.setStyle("-fx-text-fill: green;");
             } 

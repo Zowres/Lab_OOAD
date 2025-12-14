@@ -129,6 +129,7 @@ public class AddEditServicePage {
 
             if (isEdit) {
                 // Call edit validation
+            	System.out.println(service.getServiceID());
                 result = serviceController.validateEditService(
                         service.getServiceID(),
                         name,

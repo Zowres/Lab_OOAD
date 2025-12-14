@@ -22,13 +22,11 @@ public class ServiceController {
 		for (Service service : listService) {
 			if(service.getServiceID() == serviceID) {
 				serviceModel.editService(serviceID, name, description, price, duration);
-			}
-			else {
-				System.out.println("Gagal insert ke db");
 				return;
 			}
 		}
-		
+		System.out.println("Gagal insert ke db");
+		return;
 	}
 	public void deleteService(Integer serviceID) {
 		serviceModel.deleteService(serviceID);
@@ -74,7 +72,7 @@ public class ServiceController {
 	    int maxDuration = 30 * 24 * 60 * 60;    // 2592000
 		
 		
-	    if(duration <= minDuration || duration >= maxDuration) {
+	    if(duration < minDuration || duration >= maxDuration) {
 	    	return "Duration must between 1 and 30 days";
 	    }
 		
@@ -113,7 +111,7 @@ public class ServiceController {
 	    int maxDuration = 30 * 24 * 60 * 60;    // 2592000
 		
 		
-	    if(duration <= minDuration || duration >= maxDuration) {
+	    if(duration < minDuration || duration > maxDuration) {
 	    	return "Duration must between 1 and 30 days";
 	    }
 		

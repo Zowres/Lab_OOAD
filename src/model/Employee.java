@@ -23,7 +23,7 @@ public class Employee extends User{
 	public List<User> getAllEmployees(){
 		 List<User> list = new ArrayList<>();
 
-		    String query = "SELECT * FROM users WHERE userRole LIKE 'Employee' " +
+		    String query = "SELECT * FROM users WHERE userRole LIKE 'Admin' " +
 		                   "OR userRole LIKE 'Receptionist' " +
 		                   "OR userRole LIKE 'LaundryStaff';";
 

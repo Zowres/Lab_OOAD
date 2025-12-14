@@ -56,10 +56,10 @@ public class AddEmployeePage {
         tfName.setPromptText("Full name");
 
         TextField tfEmail = new TextField();
-        tfEmail.setPromptText("employee@email.com");
+        tfEmail.setPromptText("employee@govlash.com");
 
         PasswordField pfPassword = new PasswordField();
-        pfPassword.setPromptText("Password (min 7 characters)");
+        pfPassword.setPromptText("Password (min 6 characters)");
 
         PasswordField pfConfirm = new PasswordField();
         pfConfirm.setPromptText("Confirm password");
@@ -69,15 +69,13 @@ public class AddEmployeePage {
         rbMale.setToggleGroup(tgGender);
         RadioButton rbFemale = new RadioButton("Female");
         rbFemale.setToggleGroup(tgGender);
-        rbMale.setSelected(true);
 
         DatePicker dpDOB = new DatePicker();
         dpDOB.setPromptText("Date of Birth");
 
         ComboBox<String> cbRole = new ComboBox<>();
-        cbRole.getItems().addAll("Receptionist", "LaundryStaff");
+        cbRole.getItems().addAll("Admin","Receptionist", "LaundryStaff");
         cbRole.setPromptText("Select Role");
-        cbRole.getSelectionModel().selectFirst();
 
         Button btnSubmit = new Button("Add Employee");
         btnSubmit.setStyle("-fx-background-color: #5cb85c; -fx-text-fill: white; -fx-font-size: 16px;");
@@ -93,25 +91,39 @@ public class AddEmployeePage {
             String email = tfEmail.getText().trim();
             String password = pfPassword.getText();
             String confirmPassword = pfConfirm.getText();
+            String role = null;
 
-            String gender = rbMale.isSelected() ? "Male" : "Female";
+            String gender = null;
+            if(rbMale.isSelected()) gender = "Male";
+            else if(rbFemale.isSelected()) gender = "Female";
 
             LocalDate localDate = dpDOB.getValue();
-            Date dob = null;
+            java.sql.Date dob;
             if (localDate != null) {
-                dob = java.sql.Date.valueOf(localDate);
+            	dob = java.sql.Date.valueOf(localDate);
             }
+            else {
+            	dob = null;
+            }
+            
+            Date utilDate;
+            if (dob != null) {
+            	utilDate = new Date(dob.getTime());
+            }
+            else {
+            	utilDate = new Date();
+            }
+            
 
-            String role = cbRole.getValue();
+            role = cbRole.getValue();
 
-            // JUST CALL CONTROLLER METHOD
-            String result = userController.addUser(
+            String result = userController.validateAddEmployee(
                     name,
                     email,
                     password,
                     confirmPassword,
                     gender,
-                    dob,
+                    utilDate,
                     role
             );
 

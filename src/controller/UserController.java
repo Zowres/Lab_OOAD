@@ -22,55 +22,9 @@ public class UserController {
 
 	
 	//untuk ngebalikin error message harusnya pake string
-	public String addUser(String name, String email,String password, String confirmPassword, String gender, Date dob, String role) {
-		
-		if(name.isEmpty()) {
-			
-			return "Please fill your name!";
-		}
-		
-		if(getUserByName(name) != null) {
-			return "Name already used!";
-		}
-		
-		if(!email.endsWith("@email.com")) {
-			
-			return "Email must ends with @email.com ";
-		}
-		
-		if(getUserByEmail(email) != null) {
-			
-			return "Email must be unique";
-		}
-		
-		if(password.length() <= 6) {
-			return "Password length must more than 6";
-		}
-		
-		if(!password.equals(confirmPassword)) {
-			
-			return "Password must be same!";
-		}
-		
-		if(!(gender.equals("Male") || gender.equals("Female"))) {
-			return "gender must Male or Female";
-		}
-		
-		LocalDate birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		
-		LocalDate minBirthDate = LocalDate.now().minusYears(12);
-		
-		if (birthDate.isAfter(minBirthDate)) {
-            return "Age must be at least 12 or older";
-		}
-		
-		role = "Customer";
-		
+	public void addUser(String name, String email,String password, String confirmPassword, String gender, Date dob, String role) {
 		
 		userModel.addUser(name, email, confirmPassword, gender, dob, role);
-		
-		
-		return "Success Registered";
 	}
 	
 	public User login (String email, String password) {
@@ -116,7 +70,7 @@ public class UserController {
 			return "Email already be used!";
 		}
 		
-		if(password.length() <= 6) {
+		if(password.length() < 6) {
 			return "Password length must more than 6";
 		}
 		
@@ -125,8 +79,13 @@ public class UserController {
 			return "Password must be same!";
 		}
 		
-		if(! (gender.equals("Male") || gender.equals("Female"))) {
-			return "gender must Male or Female";
+
+		if (!"Male".equals(gender) && !"Female".equals(gender)) {
+		    return "Gender must be Male or Female";
+		}
+		
+		if(dob == null) {
+			return "Please select your birth date";
 		}
 		
 		LocalDate birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -137,8 +96,12 @@ public class UserController {
             return "Age must be more than 17 or older";
 		}
 		
-		if(! ( role.equals("Admin") || role.equals("Laundry Staff") || role.equals("Receptionist") )) {
-			return "Role must be between Admin , Laundry Staff , or Receptionist";
+		if(role == null) {
+			return "Please pick one role!";
+		}
+		
+		if(! (role.equals("Admin") || role.equals("LaundryStaff") || role.equals("Receptionist") )) {
+			return "Role must be between Admin , LaundryStaff , or Receptionist";
 		}
 		
 		
@@ -151,25 +114,26 @@ public class UserController {
 	public String validateAddCustomer(String name, String email, String password, String confirmPassword, String gender, Date dob) {
 		User checkUser;
 		
-		if(name.isBlank()) return "Name musn't be empty";
-		
-		//cek nama nya udh unik belom
-		checkUser = userModel.getUserByName(name);
-		if(checkUser != null) {
-			return "Name already be used!";
+		if(name.isEmpty()) {
+			
+			return "Please fill your name!";
 		}
 		
-		//check email
-		if(!email.endsWith("@govlash.com")) {
-			return "Email must end with @govlash.com";
+		if(getUserByName(name) != null) {
+			return "Name already used!";
 		}
 		
-		checkUser = userModel.getUserByEmail(email);
-		if(checkUser != null) {
-			return "Email already be used!";
+		if(!email.endsWith("@email.com")) {
+			
+			return "Email must ends with @email.com ";
 		}
 		
-		if(password.length() <= 6) {
+		if(getUserByEmail(email) != null) {
+			
+			return "Email must be unique";
+		}
+		
+		if(password.length() < 6) {
 			return "Password length must more than 6";
 		}
 		
@@ -178,20 +142,27 @@ public class UserController {
 			return "Password must be same!";
 		}
 		
-		if(! (gender.equals("Male") || gender.equals("Female"))) {
+		if(!(gender.equals("Male") || gender.equals("Female"))) {
 			return "gender must Male or Female";
+		}
+		
+		if(dob == null) {
+			return "Please select your birth date";
 		}
 		
 		LocalDate birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
-		LocalDate minBirthDate = LocalDate.now().minusYears(17);
+		LocalDate minBirthDate = LocalDate.now().minusYears(12);
 		
 		if (birthDate.isAfter(minBirthDate)) {
-            return "Age must be more than 17 or older";
+            return "Age must be at least 12 or older";
 		}
 		
+		String role = "Customer";
 		
-		return "Add Account Successfully";
+		addUser(name, email, password, confirmPassword, gender, dob, role);
+		
+		return "Success Registered";
 	}
 	
 	public User getUserByName(String name) {
