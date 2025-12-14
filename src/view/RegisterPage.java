@@ -1,178 +1,145 @@
 package view;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 import controller.UserController;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class RegisterPage {
-
     private Scene scene;
-    private UserController userCon;
+    private GridPane gridPane;
+    private VBox mainLayout;
 
-    private BorderPane borderPane;
-    private GridPane formGrid;
-    private VBox vBox;
-    private VBox form;
-
-    private Label titleLbl;
-    private Label nameLbl;
-    private Label emailLbl;
-    private Label passwordLbl;
-    private Label genderLbl;
-    private Label dobLbl;
-    private Label errorLbl;
-    private Label confirmPasswordLbl;
-
-    private TextField nameTf;
-    private TextField emailTf;
-    private PasswordField passwordPf;
-    private PasswordField confirmPasswordPf;
-    private ComboBox<String> genderCb;
-    private DatePicker dobPicker;
-
-    private Button registerBtn;
+    private Label lblTitle, lblName, lblEmail, lblPass, lblConfPass, lblGender, lblDOB, lblMsg;
+    private TextField tfName, tfEmail;
+    private PasswordField pfPass, pfConfPass;
+    private RadioButton rbMale, rbFemale;
+    private ToggleGroup tgGender;
+    private DatePicker dpDOB;
+    private Button btnRegister;
     private Hyperlink loginRedirect;
-
-    public Scene getScene() {
-        return scene;
-    }
+    private UserController userController;
 
     public RegisterPage() {
-        userCon = new UserController();
+        userController = new UserController();
         init();
         layout();
         action();
     }
 
     private void init() {
-    	borderPane = new BorderPane();
-        vBox = new VBox(25); 
-        
-        formGrid = new GridPane(); 
-        formGrid.setHgap(15); 
-        formGrid.setVgap(15); 
-
-        titleLbl = new Label("Register");
-        titleLbl.setStyle("-fx-font-size: 36px; -fx-font-weight: bold;");
-
-        nameLbl = new Label("Name");
-        emailLbl = new Label("Email");
-        passwordLbl = new Label("Password");
-        confirmPasswordLbl = new Label("Confirm Password");
-        genderLbl = new Label("Gender");
-        dobLbl = new Label("Date of Birth");
-
-        errorLbl = new Label();
-        errorLbl.setStyle("-fx-text-fill: red; -fx-font-weight: bold;"); 
-
-        nameTf = new TextField();
-        emailTf = new TextField();
-        passwordPf = new PasswordField();
-        confirmPasswordPf = new PasswordField();
-
-        genderCb = new ComboBox<>();
-        genderCb.getItems().addAll("Male", "Female");
-        genderCb.setPromptText("Select Gender"); 
-        
-        dobPicker = new DatePicker();
-        dobPicker.setPromptText("DD/MM/YYYY");
-
-        registerBtn = new Button("Register");
-        registerBtn.setMinWidth(150); 
-        
+        gridPane = new GridPane();
+        mainLayout = new VBox(20);
         loginRedirect = new Hyperlink("Already have an account? Login");
+
+        lblTitle = new Label("Register Customer");
+        lblTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+
+        lblName = new Label("Name:");
+        lblEmail = new Label("Email:");
+        lblPass = new Label("Password:");
+        lblConfPass = new Label("Confirm Password:");
+        lblGender = new Label("Gender:");
+        lblDOB = new Label("Date of Birth:");
+        lblMsg = new Label();
+
+        tfName = new TextField();
+        tfEmail = new TextField();
+        pfPass = new PasswordField();
+        pfConfPass = new PasswordField();
+
+        rbMale = new RadioButton("Male");
+        rbFemale = new RadioButton("Female");
+        tgGender = new ToggleGroup();
+        rbMale.setToggleGroup(tgGender);
+        rbFemale.setToggleGroup(tgGender);
+
+        dpDOB = new DatePicker();
+
+        btnRegister = new Button("Register");
+        
     }
 
     private void layout() {
-    	int row = 0;
-        
-        formGrid.addRow(row++, nameLbl, nameTf);
-        formGrid.addRow(row++, emailLbl, emailTf);
-        formGrid.addRow(row++, passwordLbl, passwordPf);
-        formGrid.addRow(row++, confirmPasswordLbl, confirmPasswordPf);
-        formGrid.addRow(row++, genderLbl, genderCb);
-        formGrid.addRow(row++, dobLbl, dobPicker);
-        
-        nameTf.setMaxWidth(Double.MAX_VALUE);
-        emailTf.setMaxWidth(Double.MAX_VALUE);
-        passwordPf.setMaxWidth(Double.MAX_VALUE);
-        confirmPasswordPf.setMaxWidth(Double.MAX_VALUE);
-        genderCb.setMaxWidth(Double.MAX_VALUE);
-        dobPicker.setMaxWidth(Double.MAX_VALUE);
-        
-        ColumnConstraints labelCol = new ColumnConstraints();
-        labelCol.setHalignment(HPos.LEFT);
-        ColumnConstraints inputCol = new ColumnConstraints();
-        inputCol.setHgrow(Priority.ALWAYS);
-        formGrid.getColumnConstraints().addAll(labelCol, inputCol);
-        
-        HBox buttonWrapper = new HBox(registerBtn);
-        buttonWrapper.setAlignment(Pos.CENTER);
-        
-        GridPane.setColumnSpan(buttonWrapper, 2); 
-        GridPane.setHalignment(buttonWrapper, HPos.CENTER);
-        formGrid.add(buttonWrapper, 0, row++);
-        
-        vBox.setAlignment(Pos.CENTER);
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(20));
 
-        formGrid.setMaxWidth(400); 
-        vBox.setPadding(new Insets(20)); 
+        gridPane.add(lblName, 0, 0); 
+        gridPane.add(tfName, 1, 0);
+        gridPane.add(lblEmail, 0, 1); 
+        gridPane.add(tfEmail, 1, 1);
+        gridPane.add(lblPass, 0, 2); 
+        gridPane.add(pfPass, 1, 2);
+        gridPane.add(lblConfPass, 0, 3); 
+        gridPane.add(pfConfPass, 1, 3);
+        
+        gridPane.add(lblGender, 0, 4);
+        VBox genderBox = new VBox(5, rbMale, rbFemale);
+        gridPane.add(genderBox, 1, 4);
 
-        vBox.getChildren().addAll(titleLbl, formGrid, errorLbl, loginRedirect);
+        gridPane.add(lblDOB, 0, 5); gridPane.add(dpDOB, 1, 5);
+        gridPane.add(btnRegister, 1, 6);
 
-        borderPane.setCenter(vBox);
-        scene = new Scene(borderPane, 500, 600);
+        mainLayout.setAlignment(Pos.CENTER);
+        mainLayout.getChildren().addAll(lblTitle, gridPane, lblMsg, loginRedirect);
+
+        scene = new Scene(mainLayout, 500, 550);
     }
 
     private void action() {
-        registerBtn.setOnAction(e -> {
-            errorLbl.setText("");
 
-            String name = nameTf.getText();
-            String email = emailTf.getText();
-            String password = passwordPf.getText();
-            String confirmPassword = confirmPasswordPf.getText();
-            String gender = genderCb.getValue();
+        btnRegister.setOnAction(e -> {
+            String name = tfName.getText();
+            String email = tfEmail.getText();
+            String pass = pfPass.getText();
+            String confPass = pfConfPass.getText();
             
-            LocalDate dobLocal = dobPicker.getValue(); 
+            String gender = "";
+            if(rbMale.isSelected()) gender = "Male";
+            else if(rbFemale.isSelected()) gender = "Female";
+
+            LocalDate localDate = dpDOB.getValue();
+            Date dob;
+            if (localDate != null) {
+            	dob = Date.valueOf(localDate);
+            }
+            else {
+            	dob = null;
+            }
             
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty()
-                    || confirmPassword.isEmpty() || gender == null || dobLocal == null) {
-                errorLbl.setText("All fields must be filled");
-                return;
+           
+            java.util.Date utilDate;
+            if (dob != null) {
+            	utilDate = new java.util.Date(dob.getTime());
+            }
+            else {
+            	utilDate = new java.util.Date();
             }
 
-
-            Date dob = java.sql.Date.valueOf(dobLocal);
+            String result = userController.addUser(name, email, pass, confPass, gender, utilDate, "Customer");
             
-            String role = "Customer"; 
-            
-            String success = userCon.addUser(name, email, password, confirmPassword, gender, dob, role);
-            
-            System.out.println("Berhasil");
-
-            if (success.isEmpty()) {
-                ViewManager.getInstance().switchScene(new LoginPage().getScene());
-            } else {
-                errorLbl.setText(success);
+            lblMsg.setText(result);
+            if(result.equals("Success Registered")) {
+                lblMsg.setStyle("-fx-text-fill: green;");
+            } 
+            else {
+                lblMsg.setStyle("-fx-text-fill: red;");
             }
         });
-
+        
         loginRedirect.setOnAction(e -> {
-            ViewManager.getInstance().switchScene(new LoginPage().getScene());
+        	ViewManager.getInstance().switchScene(new LoginPage().getScene());
         });
+    }
+
+    public Scene getScene() { 
+    	return scene; 
     }
 }

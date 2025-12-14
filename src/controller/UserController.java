@@ -12,6 +12,11 @@ public class UserController {
 	
 	User userModel;
 	Employee employeeModel;
+	
+	public UserController() {
+		this.userModel = new User();
+       
+	}
 
 	
 	//untuk ngebalikin error message harusnya pake string

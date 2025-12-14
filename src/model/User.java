@@ -231,7 +231,7 @@ public class User{
 	public void addUser (String name, String email, String password, String gender, Date DOB, String role) {
 		
 		//insert db
-		 String query = "INSERT INTO users (name, email, password, gender, dob, role) VALUES (?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO users (userName, userEmail, userPassword, userGender, userDOB, userRole) VALUES (?, ?, ?, ?, ?, ?)";
 
 		    try {
 		        PreparedStatement ps = Connect.getInstance().preparedStatement(query);
@@ -240,7 +240,7 @@ public class User{
 		        ps.setString(2, email);
 		        ps.setString(3, password);
 		        ps.setString(4, gender);
-		        ps.setDate(5, (java.sql.Date) DOB);  
+		        ps.setDate(5, new java.sql.Date(DOB.getTime()));  
 		        ps.setString(6, role);
 
 		        ps.executeUpdate();
